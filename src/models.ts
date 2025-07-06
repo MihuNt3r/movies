@@ -10,7 +10,7 @@ export class Movie extends Model {
         primaryKey: true,
         autoIncrement: true,
     })
-    id!: number;
+    declare id: number;
 
     @Column({
         type: DataType.STRING,
@@ -44,7 +44,7 @@ export class Actor extends Model {
         primaryKey: true,
         autoIncrement: true,
     })
-    id!: number;
+    declare id: number;
 
     @Column({
         type: DataType.STRING,
