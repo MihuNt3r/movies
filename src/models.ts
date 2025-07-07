@@ -81,3 +81,18 @@ export class MovieActor extends Model {
     @BelongsTo(() => Actor)
     actor!: Actor;
 }
+
+@Table({ tableName: 'users' })
+export class User extends Model {
+    @Column({ type: DataType.STRING, allowNull: false, unique: true })
+    email!: string;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    name!: string;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    password!: string;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    salt!: string;
+}

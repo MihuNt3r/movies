@@ -2,14 +2,22 @@ import express, { Request, Response } from 'express';
 import { sequelize } from "./database.ts";
 import { errorHandler } from "./middleware/errorHandler.ts";
 import { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie } from "./services/movieService.ts";
+import { createUser } from "./services/userService.ts";
 import { validateBody } from "./middleware/validators.ts";
 import { CreateUpdateMovieDto } from "./dtos/movieDtos.ts";
-import {CreateUpdateMovieSchema, MovieQuerySchema} from "./validators/movieValidators.ts";
-// import { upload } from "./middleware/upload.ts";
+import { CreateUpdateMovieSchema, MovieQuerySchema} from "./validators/movieValidators.ts";
 import { importMoviesFromTxt } from "./services/movieImportService.ts";
 import multer from "multer";
+import dotenv from "dotenv";
+import { CreateUserSchema } from "./validators/userValidators.ts";
+import { CreateSessionSchema } from "./validators/sessionValidators.ts";
+import { CreateUserDto } from "./dtos/userDtos.ts";
+import { createSession } from "./services/sessionService.ts";
+import { SessionCreateDto } from "./dtos/sessionDtos.ts";
 
 const upload = multer({ dest: "uploads/" });
+
+dotenv.config();
 
 sequelize.sync()
     .then(() => console.log('db is ready'))
@@ -68,6 +76,34 @@ app.post('/movies/import', upload.single('file'), async (req: Request, res: Resp
         });
     }
 });
+
+// ----------------------------------------------------------------------- User
+
+app.post('/users', async (req: Request, res: Response) => {
+    const parsed = CreateUserSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+        res.status(400).json({ error: 'Validation failed', details: parsed.error.flatten() });
+        return;
+    }
+
+    const { token } = await createUser(parsed.data as CreateUserDto);
+    res.json({ token });
+})
+
+// ---------------------------------------------------------------------------- Sessions
+app.post('/sessions', async (req: Request, res: Response) => {
+    const parsed = CreateSessionSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+        res.status(400).json({ error: 'Validation failed', details: parsed.error.flatten() });
+        return;
+    }
+
+    const { token } = await createSession(req.body as SessionCreateDto);
+    res.json({ token });
+})
+
 
 app.use(errorHandler);
 
