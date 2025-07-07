@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { sequelize } from "./database.ts";
 import { Actor, Movie } from "./models.ts";
+import { errorHandler } from "./middleware/errorHandler.ts";
+import { getAllMovies, getMovieById } from "./services/movieService.ts";
 
 sequelize.sync()
     .then(() => console.log('db is ready'))
@@ -11,19 +13,8 @@ const app = express();
 app.use(express.json());
 
 app.get('/movies', async (req: Request, res: Response) => {
-    try {
-        const movies = await Movie.findAll({
-            include: [{
-                model: Actor,
-                through: { attributes: [] },
-            }],
-        });
-
-        res.json(movies);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch movies' });
-    }
+    const movies = await getAllMovies();
+    res.json(movies);
 });
 
 app.post('/movies', async (req: Request, res: Response) => {
@@ -53,32 +44,8 @@ app.post('/movies', async (req: Request, res: Response) => {
 });
 
 app.get('/movies/:id', async (req: Request, res: Response) => {
-    try {
-        const movieId = Number(req.params.id);
-
-        if (isNaN(movieId)) {
-            res.status(400).json({error: 'Invalid movie ID'});
-            return;
-        }
-
-        const movie = await Movie.findByPk(movieId, {
-            include: [{
-                model: Actor,
-                attributes: ['id', 'name'],
-                through: {attributes: []}, // hides MovieActor
-            }],
-        });
-
-        if (!movie) {
-            res.status(404).json({error: 'Movie not found'});
-            return;
-        }
-
-        res.json(movie);
-    } catch (error) {
-        console.error('Error fetching movie:', error);
-        res.status(500).json({error: 'Failed to fetch movie'});
-    }
+    const movie = await getMovieById(Number(req.params.id));
+    res.json(movie);
 });
 
 app.delete('/movies/:id', async (req: Request, res: Response) => {
@@ -105,6 +72,8 @@ app.delete('/movies/:id', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to delete movie' });
     }
 });
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
     console.log('Listening on port 3000');
