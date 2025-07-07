@@ -1,8 +1,15 @@
 import express, { Request, Response } from 'express';
 import { sequelize } from "./database.ts";
-import { Actor, Movie } from "./models.ts";
 import { errorHandler } from "./middleware/errorHandler.ts";
-import { getAllMovies, getMovieById } from "./services/movieService.ts";
+import { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie } from "./services/movieService.ts";
+import { validateBody } from "./middleware/validators.ts";
+import { CreateUpdateMovieDto } from "./dtos/movieDtos.ts";
+import {CreateUpdateMovieSchema, MovieQuerySchema} from "./validators/movieValidators.ts";
+// import { upload } from "./middleware/upload.ts";
+import { importMoviesFromTxt } from "./services/movieImportService.ts";
+import multer from "multer";
+
+const upload = multer({ dest: "uploads/" });
 
 sequelize.sync()
     .then(() => console.log('db is ready'))
@@ -13,34 +20,15 @@ const app = express();
 app.use(express.json());
 
 app.get('/movies', async (req: Request, res: Response) => {
-    const movies = await getAllMovies();
-    res.json(movies);
-});
+    const parsed = MovieQuerySchema.safeParse(req.query);
 
-app.post('/movies', async (req: Request, res: Response) => {
-    const { title, year, format, actors } = req.body;
-
-    try {
-        // Create the movie
-        const movie = await Movie.create({ title, year, format });
-
-        // Create actors and associate with movie
-        const actorInstances: Actor[] = [];
-        for (const actorName of actors) {
-            const [actor] = await Actor.findOrCreate({
-                where: { name: actorName },
-            });
-            actorInstances.push(actor);
-        }
-
-        // Associate actors with movie (creates entries in movie_actors)
-        await movie.$set('actors', actorInstances);
-
-        res.status(201).json({ message: 'Movie created successfully', movie });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to create movie' });
+    if (!parsed.success) {
+        res.status(400).json({ error: 'Invalid query', details: parsed.error.flatten() });
+        return;
     }
+
+    const movies = await getAllMovies(parsed.data);
+    res.json(movies);
 });
 
 app.get('/movies/:id', async (req: Request, res: Response) => {
@@ -48,28 +36,36 @@ app.get('/movies/:id', async (req: Request, res: Response) => {
     res.json(movie);
 });
 
+app.post('/movies', validateBody(CreateUpdateMovieSchema), async (req: Request, res: Response) => {
+    const movie = await createMovie(req.body as CreateUpdateMovieDto);
+    res.status(201).json({ message: 'Movie created successfully', movie });
+});
+
+app.patch('/movies/:id', validateBody(CreateUpdateMovieSchema), async (req: Request, res: Response) => {
+    const movie = await updateMovie(Number(req.params.id), req.body as CreateUpdateMovieDto);
+    res.status(201).json({ message: 'Movie updated successfully', movie });
+});
+
 app.delete('/movies/:id', async (req: Request, res: Response) => {
-    const movieId = Number(req.params.id);
+    await deleteMovie(Number(req.params.id));
+    res.status(204).json({ message: 'Movie deleted successfully' });
+});
 
-    if (isNaN(movieId)) {
-        res.status(400).json({ error: 'Invalid movie ID' });
-        return;
-    }
-
+app.post('/movies/import', upload.single('file'), async (req: Request, res: Response) => {
     try {
-        const movie = await Movie.findByPk(movieId);
-
-        if (!movie) {
-            res.status(404).json({ error: 'Movie not found' });
+        if (!req.file) {
+            res.status(400).json({ error: 'No file uploaded' });
             return;
         }
 
-        await movie.destroy();
-
-        res.status(200).json({ message: `Movie with ID ${movieId} deleted successfully.` });
-    } catch (error) {
-        console.error('Error deleting movie:', error);
-        res.status(500).json({ error: 'Failed to delete movie' });
+        const result = await importMoviesFromTxt(req.file.path);
+        res.json({ message: 'Import completed', ...result });
+    } catch (err) {
+        console.error('Import failed:', err);
+        res.status(500).json({
+            error: 'Import failed',
+            details: err instanceof Error ? err.message : String(err),
+        });
     }
 });
 
