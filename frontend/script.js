@@ -14,6 +14,25 @@ function submitForm(e) {
 		method: "POST",
 		body: formData,
 	})
-		.then((res) => console.log(res))
-		.catch((err) => console.log("Error occured", err));
+		.then((res) => {
+			if (res.ok) {
+				$("#notification")
+					.text("Import completed successfully ✅")
+					.css("color", "green")
+					.fadeIn()
+					.delay(3000)
+					.fadeOut();
+			} else {
+				throw new Error("Server error");
+			}
+		})
+		.catch((err) => {
+			console.log("Error occurred", err);
+			$("#notification")
+				.text("Import failed ❌")
+				.css("color", "red")
+				.fadeIn()
+				.delay(3000)
+				.fadeOut();
+		});
 }

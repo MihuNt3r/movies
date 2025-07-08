@@ -42,7 +42,7 @@ router.delete('/:id', authenticate, async (req: Request, res: Response) => {
     res.status(204).json({ message: 'Movie deleted successfully' });
 });
 
-router.post('/import', authenticate, upload.single('file'), async (req: Request, res: Response) => {
+router.post('/import', upload.single('file'), async (req: Request, res: Response) => {
     try {
         if (!req.file) {
             res.status(400).json({ error: 'No file uploaded' });
