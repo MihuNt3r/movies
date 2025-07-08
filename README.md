@@ -26,3 +26,16 @@ A Node.js REST API for managing a movie collection, supporting CRUD operations a
 
 - `POST /users` — Register a new user
 - `POST /sessions` — Log in and receive a JWT token
+
+## Setup
+
+1. Install dependencies
+npm install
+
+2. Configure environment variables
+
+Create a .env file in the root directory with the following content:
+JWT_SECRET=your_jwt_secret
+APP_PORT=8050
+
+3. Run npm run dev
