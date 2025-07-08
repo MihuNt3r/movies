@@ -10,7 +10,7 @@ function submitForm(e) {
 	formData.append("file", singleFile.files[0])
 
 	//update the url where we'll send the request to
-	fetch("http://localhost:3000/movies/import", {
+	fetch("/movies/import", {
 		method: "POST",
 		body: formData,
 	})
