@@ -5,7 +5,6 @@ import { CreateUserDto } from "../dtos/userDtos.ts";
 
 const router = express.Router();
 
-// POST /users
 router.post('/', async (req: Request, res: Response) => {
     const parsed = CreateUserSchema.safeParse(req.body);
 

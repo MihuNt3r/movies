@@ -24,6 +24,8 @@ app.use('/sessions', sessionRoutes);
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
+const APP_PORT = Number(process.env.APP_PORT) || 8080;
+
+app.listen(APP_PORT, () => {
+    console.log(`Listening on port ${APP_PORT}...`);
 });

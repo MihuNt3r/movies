@@ -5,7 +5,6 @@ import { SessionCreateDto } from "../dtos/sessionDtos.ts";
 
 const router = express.Router();
 
-// POST /sessions
 router.post('/', async (req: Request, res: Response) => {
     const parsed = CreateSessionSchema.safeParse(req.body);
 
