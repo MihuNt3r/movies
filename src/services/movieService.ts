@@ -1,7 +1,7 @@
-import { Actor, Movie } from "../models.ts";
-import { NotFoundError } from "../errors/NotFoundError.ts";
-import { CreateUpdateMovieDto } from "../dtos/movieDtos.ts";
-import { MovieQuery } from "../validators/movieValidators.ts";
+import { Actor, Movie } from "../models.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { CreateUpdateMovieDto } from "../dtos/movieDtos.js";
+import { MovieQuery } from "../validators/movieValidators.js";
 import { Op } from "sequelize";
 
 const getAllMovies = async (query: MovieQuery) => {

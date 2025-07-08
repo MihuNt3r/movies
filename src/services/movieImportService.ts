@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import { Movie, Actor } from "../models.ts";
-import { CreateUpdateMovieDto } from "../dtos/movieDtos.ts";
+import { Movie, Actor } from "../models.js";
+import { CreateUpdateMovieDto } from "../dtos/movieDtos.js";
 
 export const importMoviesFromTxt = async (filePath: string) => {
     const raw = await fs.readFile(filePath, 'utf-8');

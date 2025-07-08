@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import { createSession } from "../services/sessionService.ts";
-import { CreateSessionSchema } from "../validators/sessionValidators.ts";
-import { SessionCreateDto } from "../dtos/sessionDtos.ts";
+import { createSession } from "../services/sessionService.js";
+import { CreateSessionSchema } from "../validators/sessionValidators.js";
+import { SessionCreateDto } from "../dtos/sessionDtos.js";
 
 const router = express.Router();
 

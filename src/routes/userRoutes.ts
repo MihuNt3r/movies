@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import { createUser } from "../services/userService.ts";
-import { CreateUserSchema } from "../validators/userValidators.ts";
-import { CreateUserDto } from "../dtos/userDtos.ts";
+import { createUser } from "../services/userService.js";
+import { CreateUserSchema } from "../validators/userValidators.js";
+import { CreateUserDto } from "../dtos/userDtos.js";
 
 const router = express.Router();
 

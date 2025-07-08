@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Movie, Actor, MovieActor, User } from "./models.ts";
+import { Movie, Actor, MovieActor, User } from "./models.js";
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',

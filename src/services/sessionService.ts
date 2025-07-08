@@ -1,8 +1,8 @@
-import {User} from "../models.ts";
-import { NotFoundError } from "../errors/NotFoundError.ts";
+import {User} from "../models.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { SessionCreateDto } from "../dtos/sessionDtos.ts";
+import { SessionCreateDto } from "../dtos/sessionDtos.js";
 
 const createSession = async (sessionCreateDto: SessionCreateDto) => {
     const { email, password } = sessionCreateDto;

@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
-import { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie } from "../services/movieService.ts";
-import { validateBody } from "../middleware/validators.ts";
-import { CreateUpdateMovieDto } from "../dtos/movieDtos.ts";
-import { CreateUpdateMovieSchema, MovieQuerySchema } from "../validators/movieValidators.ts";
-import { importMoviesFromTxt } from "../services/movieImportService.ts";
-import { authenticate } from "../middleware/authentication.ts";
+import { getAllMovies, getMovieById, createMovie, updateMovie, deleteMovie } from "../services/movieService.js";
+import { validateBody } from "../middleware/validators.js";
+import { CreateUpdateMovieDto } from "../dtos/movieDtos.js";
+import { CreateUpdateMovieSchema, MovieQuerySchema } from "../validators/movieValidators.js";
+import { importMoviesFromTxt } from "../services/movieImportService.js";
+import { authenticate } from "../middleware/authentication.js";
 import multer from "multer";
 
 const router = express.Router();

@@ -1,11 +1,11 @@
 import express from 'express';
-import { sequelize } from "./database.ts";
-import { errorHandler } from "./middleware/errorHandler.ts";
+import { sequelize } from "./database.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 import dotenv from "dotenv";
 
-import movieRoutes from './routes/movieRoutes.ts';
-import userRoutes from './routes/userRoutes.ts';
-import sessionRoutes from './routes/sessionRoutes.ts';
+import movieRoutes from './routes/movieRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import sessionRoutes from './routes/sessionRoutes.js';
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { User } from "../models.ts";
-import { CreateUserDto } from "../dtos/userDtos.ts";
+import { User } from "../models.js";
+import { CreateUserDto } from "../dtos/userDtos.js";
 import jwt from 'jsonwebtoken';
 
 const createUser = async (userDto: CreateUserDto) => {
