@@ -83,3 +83,6 @@ This application leverages several modern backend and frontend development techn
 These techniques together provide a robust, secure, and maintainable foundation for the application.
 
 ## Instruction
+
+- You can explore and test the API using the built-in Swagger documentation at [http://localhost:8050/api-docs](http://localhost:8050/api-docs) after starting the server or Docker container.
+- To import movies in bulk, open [http://localhost:8050](http://localhost:8050) in your browser and use the provided UI to upload a `.txt` file in the supported format.
