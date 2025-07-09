@@ -1,4 +1,6 @@
+import { readFileSync } from 'fs'
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { sequelize } from "./database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import dotenv from "dotenv";
@@ -15,8 +17,12 @@ sequelize.sync()
 
 const app = express();
 
+const swaggerFile = JSON.parse(readFileSync('./src/swagger/swagger-output.json', 'utf8'));
+
 app.use(express.json());
 app.use(express.static('frontend'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Register routes
 app.use('/movies', movieRoutes);

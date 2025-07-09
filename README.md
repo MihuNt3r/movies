@@ -42,6 +42,20 @@ Create a .env file in the root directory with the following content:
 
 ## Docker Image
 
+To build and run the application using Docker:
+
+1. **Build the Docker image**  
+   (The `.` at the end means build from the current directory. You can name the image `movies`.)
+
+   ```sh
+   docker build -t movies .
+
+2. **Run the Docker container**
+   ```sh
+   docker run -p 8050:8050 movies
+
+3. **You can reach API on localhost:8050/movies or run UI on localhost:8050**
+
 ## Techniques Used
 
 This application leverages several modern backend and frontend development techniques:
