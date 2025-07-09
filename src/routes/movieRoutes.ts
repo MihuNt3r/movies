@@ -49,6 +49,11 @@ router.post('/import', upload.single('file'), async (req: Request, res: Response
             return;
         }
 
+        if (!req.file.originalname.endsWith('.txt')) {
+            res.status(415).json({ error: 'Only .txt files are supported' });
+            return
+        }
+
         const result = await importMoviesFromTxt(req.file.path);
         res.json({ message: 'Import completed', ...result });
     } catch (err) {

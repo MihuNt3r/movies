@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
+const actorNameRegex = /^[A-Za-zÀ-ÿ'-.]+(?: [A-Za-zÀ-ÿ'-.]+)*$/;
+
 export const CreateUpdateMovieSchema = z.object({
-    title: z.string().min(1),
-    year: z.number().int().min(1880).max(2100),
+    title: z.string().trim().min(1),
+    year: z.number().int().min(1880).max(2025),
     format: z.enum(['DVD', 'VHS', 'Blu-ray']),
-    actors: z.array(z.string()),
+    actors: z.array(z.string().trim().min(1, 'Actor name cannot be empty or just spaces').regex(actorNameRegex, 'Invalid actor name format')),
 });
 
 export const MovieQuerySchema = z.object({

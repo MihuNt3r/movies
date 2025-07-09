@@ -2,10 +2,12 @@ import bcrypt from 'bcrypt';
 import { User } from "../models.js";
 import { CreateUserDto } from "../dtos/userDtos.js";
 import jwt from 'jsonwebtoken';
+import {EntityAlreadyExists} from "../errors/EntityAlreadyExists.js";
 
 const createUser = async (userDto: CreateUserDto) => {
-    if (userDto.password !== userDto.confirmPassword) {
-        throw new Error("Passwords don't match");
+    const existingUser = await User.findOne({ where: { email: userDto.email } });
+    if (existingUser) {
+        throw new EntityAlreadyExists("User with this email already exists");
     }
 
     const saltRounds = 10;

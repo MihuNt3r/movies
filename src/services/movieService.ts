@@ -2,7 +2,7 @@ import { Actor, Movie } from "../models.js";
 import { NotFoundError } from "../errors/NotFoundError.js";
 import { CreateUpdateMovieDto } from "../dtos/movieDtos.js";
 import { MovieQuery } from "../validators/movieValidators.js";
-import { Op } from "sequelize";
+import { Op, fn, col } from "sequelize";
 
 const getAllMovies = async (query: MovieQuery) => {
     const {
@@ -43,7 +43,7 @@ const getAllMovies = async (query: MovieQuery) => {
                 required: !!actor || !!search, // inner join only when filtering
             },
         ],
-        order: [[sort, order]],
+        // order: [[fn('LOWER', col(sort)), order]],
         limit,
         offset,
     });
