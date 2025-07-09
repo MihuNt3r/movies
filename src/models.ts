@@ -2,7 +2,7 @@ import { Table, Model, Column, DataType, BelongsToMany, ForeignKey, BelongsTo } 
 
 @Table({
     timestamps: true,
-    tableName: "movies",
+    tableName: "movies"
 })
 export class Movie extends Model {
     @Column({

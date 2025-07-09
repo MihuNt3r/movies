@@ -3,6 +3,7 @@ import { NotFoundError } from "../errors/NotFoundError.js";
 import { CreateUpdateMovieDto } from "../dtos/movieDtos.js";
 import { MovieQuery } from "../validators/movieValidators.js";
 import { Op, fn, col } from "sequelize";
+import { EntityAlreadyExists } from "../errors/EntityAlreadyExists.js";
 
 const getAllMovies = async (query: MovieQuery) => {
     const {
@@ -43,7 +44,7 @@ const getAllMovies = async (query: MovieQuery) => {
                 required: !!actor || !!search, // inner join only when filtering
             },
         ],
-        // order: [[fn('LOWER', col(sort)), order]],
+        order: sort === "title" ? [[fn('LOWER', col(sort)), order]] : [[col(sort), order]],
         limit,
         offset,
     });
@@ -68,6 +69,14 @@ const getMovieById = async (id: number) => {
 
 const createMovie = async (movieDto: CreateUpdateMovieDto) => {
     const { title, year, format, actors } = movieDto;
+
+    const existingMovie = await Movie.findOne({
+        where: { title, year, format },
+    });
+
+    if (existingMovie) {
+        throw new EntityAlreadyExists('Movie with the same title, year, and format already exists');
+    }
 
     const movie = await Movie.create({ title, year, format });
 

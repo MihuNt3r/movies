@@ -4,7 +4,7 @@ const actorNameRegex = /^[A-Za-zÀ-ÿ'-.]+(?: [A-Za-zÀ-ÿ'-.]+)*$/;
 
 export const CreateUpdateMovieSchema = z.object({
     title: z.string().trim().min(1),
-    year: z.number().int().min(1880).max(2025),
+    year: z.number().int().min(1850).max(2025),
     format: z.enum(['DVD', 'VHS', 'Blu-ray']),
     actors: z.array(z.string().trim().min(1, 'Actor name cannot be empty or just spaces').regex(actorNameRegex, 'Invalid actor name format')),
 });
